@@ -19,7 +19,7 @@ class _squatState extends State<squat> {
     print("Calories Counted");
     final prefs = await SharedPreferences.getInstance();
     var calories = prefs.getInt('squat') ?? 0;
-    var cal = calories + (counter * 0.2).toInt();
+    var cal = calories + (counter * 0.32).toInt();
     prefs.setInt('squat', cal);
     print("Counter: $counter \n Calories: $cal");
   }

@@ -65,7 +65,7 @@ class _CalorieState extends State<Calorie> {
       ),
       Center(
         child: Text(
-          'Total Calories Burn: ${total_calories} kcl',
+          'Total Calories Burn: ${total_calories} cal',
           style: TextStyle(fontSize: 25),
         ),
       ),

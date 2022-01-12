@@ -31,7 +31,7 @@ class _arm_pressState extends State<arm_press> {
   Future<void> calculate(key) async {
     final prefs = await SharedPreferences.getInstance();
     var calories = prefs.getInt(key.toString()) ?? 0;
-    var cal = calories + (counter * 0.2).toInt();
+    var cal = calories + (counter * 0.02).toInt();
     prefs.setInt(key.toString(), cal);
     print("Calories Counted:${cal}");
   }
