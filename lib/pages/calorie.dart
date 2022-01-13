@@ -70,6 +70,13 @@ class _CalorieState extends State<Calorie> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(children: [
+        "Your Report"
+            .text
+            .headline2(context)
+            .size(30)
+            .blue300
+            .makeCentered()
+            .pOnly(top: 10),
         SfCircularChart(
           legend: Legend(
               isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
