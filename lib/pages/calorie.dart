@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class Calorie extends StatefulWidget {
   Calorie({Key? key}) : super(key: key);
@@ -14,8 +16,10 @@ class _CalorieState extends State<Calorie> {
   var squat_calories = 0;
   var situp_calories = 0;
   var total_calories = 0;
+  bool isRest = false;
   late List<GDPData> _chartData;
   late TooltipBehavior _tooltipBehavior;
+
   void getCalories() async {
     print("Get Calories");
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -25,8 +29,12 @@ class _CalorieState extends State<Calorie> {
       situp_calories = prefs.getInt('situp') ?? 0;
       total_calories = arm_calories + squat_calories + situp_calories;
       _chartData = getCahrtData();
+      if (total_calories != 0) {
+        isRest = false;
+      } else {
+        isRest = true;
+      }
     });
-    print("Calories:${prefs.getInt('arm_press')}");
   }
 
   List<GDPData> getCahrtData() {
@@ -36,6 +44,17 @@ class _CalorieState extends State<Calorie> {
       if (situp_calories != 0) GDPData('situp', situp_calories),
     ];
     return chartData;
+  }
+
+  void reset() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('arm_press', 0);
+    prefs.setInt('situp', 0);
+    prefs.setInt('squat', 0);
+    setState(() {
+      isRest = true;
+      getCalories();
+    });
   }
 
   @override
@@ -48,28 +67,67 @@ class _CalorieState extends State<Calorie> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      SfCircularChart(
-        legend:
-            Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
-        tooltipBehavior: _tooltipBehavior,
-        series: <CircularSeries>[
-          DoughnutSeries<GDPData, String>(
-            dataSource: _chartData,
-            xValueMapper: (GDPData data, _) => data.work,
-            yValueMapper: (GDPData data, _) => data.calories,
-            dataLabelSettings: DataLabelSettings(isVisible: true),
-            enableTooltip: true,
-          )
-        ],
-      ),
-      Center(
-        child: Text(
-          'Total Calories Burn: ${total_calories} cal',
-          style: TextStyle(fontSize: 25),
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(children: [
+        SfCircularChart(
+          legend: Legend(
+              isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
+          tooltipBehavior: _tooltipBehavior,
+          series: <CircularSeries>[
+            DoughnutSeries<GDPData, String>(
+              dataSource: _chartData,
+              xValueMapper: (GDPData data, _) => data.work,
+              yValueMapper: (GDPData data, _) => data.calories,
+              dataLabelSettings: DataLabelSettings(isVisible: true),
+              enableTooltip: true,
+            )
+          ],
         ),
-      ),
-    ]);
+        Center(
+          child: Text(
+            'Total Calories Burn: ${total_calories} cal',
+            style: TextStyle(fontSize: 25),
+          ),
+        ),
+        if (arm_calories != 0)
+          'Total Arm Press: ${arm_calories ~/ 0.02}'
+              .text
+              .xl3
+              .make()
+              .pOnly(top: 20),
+        if (squat_calories != 0)
+          'Total Squat: ${squat_calories ~/ 0.3}'
+              .text
+              .xl3
+              .make()
+              .pOnly(top: 10),
+        if (situp_calories != 0)
+          'Total Situp: ${situp_calories ~/ 0.32}'
+              .text
+              .xl3
+              .make()
+              .pOnly(top: 10),
+        InkWell(
+          onTap: () => reset(),
+          child: isRest
+              ? Container()
+              : AnimatedContainer(
+                      duration: Duration(seconds: 1),
+                      height: isRest ? 0 : 50,
+                      width:
+                          isRest ? 0 : MediaQuery.of(context).size.width * 0.4,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: isRest ? Colors.red : Vx.blue400),
+                      child: Center(
+                          child: isRest
+                              ? ''.text.make()
+                              : "Reset Count".text.white.make()))
+                  .pOnly(top: 30),
+        ),
+      ]),
+    );
   }
 }
 

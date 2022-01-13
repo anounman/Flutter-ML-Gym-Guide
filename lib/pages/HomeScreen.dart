@@ -20,15 +20,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void createKey() async {
+  // only for test
+  void setData() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('arm_press', 0);
-    prefs.setInt('situp', 0);
-    prefs.setInt('squat', 0);
+    prefs.setInt('arm_press', 20);
+    prefs.setInt('situp', 30);
+    prefs.setInt('squat', 10);
   }
 
   @override
   void initState() {
+    setData();
     super.initState();
   }
 
