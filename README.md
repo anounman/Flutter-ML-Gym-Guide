@@ -1,6 +1,11 @@
-# gym_guy
+# Fit Mode
 
-A new Flutter project.
+ML flutter project it use image processing  to detect postion and count your workout
+
+# Preview
+
+
+![photo_2022-01-20_15-47-39](https://user-images.githubusercontent.com/71139852/150319493-47887b4a-3833-427f-8d22-23be0c29e20f.jpg) ![photo_2022-01-20_15-45-48](https://user-images.githubusercontent.com/71139852/150319437-41a6dd2e-4c32-42e4-b222-cd819f3159bb.jpg)
 
 ## Getting Started
 
